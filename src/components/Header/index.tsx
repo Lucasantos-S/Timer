@@ -1,13 +1,19 @@
-import React from 'react'
 import { HeaderContainer } from './styles'
+import { Timer, Scroll } from 'phosphor-react'
+import Logo from '../../assets/Logo.svg'
+import { NavLink } from 'react-router-dom'
 
 export default function Header() {
   return (
     <HeaderContainer>
-      <span>Logo</span>
+      <img src={Logo} alt="" />
       <nav>
-        <a href="">timer</a>
-        <a href="">History</a>
+        <NavLink to={'/'} title="timer">
+          <Timer size={24} />
+        </NavLink>
+        <NavLink to={'/history'} title="historico">
+          <Scroll size={24} />
+        </NavLink>
       </nav>
     </HeaderContainer>
   )
