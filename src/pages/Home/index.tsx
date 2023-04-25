@@ -8,6 +8,7 @@ import {
   Separator,
   StartCountdowbButton,
   TaskInput,
+  Datalist,
 } from './styles'
 
 export default function Home() {
@@ -19,8 +20,16 @@ export default function Home() {
           <TaskInput
             type="text"
             id="task"
+            list="task-suggestions"
             placeholder="Dê um nome para o seu projeto"
           />
+
+          <Datalist id="task-suggestions">
+            <option value="projeto 1" />
+            <option value="projeto 2" />
+            <option value="projeto 3" />
+            <option value="Banana" />
+          </Datalist>
 
           <label htmlFor="minutesAmount">Durante</label>
           <MinutesAmountInput
