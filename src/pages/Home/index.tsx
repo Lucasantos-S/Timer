@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react'
 import { Play } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
+import { differenceInSeconds } from 'date-fns'
 
 import {
   CountdownContainer,
@@ -21,7 +23,18 @@ const newCycleFormValidadeSchema = zod.object({
 
 type INewCycleFormDate = zod.infer<typeof newCycleFormValidadeSchema>
 
+interface ICycle {
+  id: string
+  task: string
+  minutesAmount: number
+  startDate: Date
+}
+
 export default function Home() {
+  const [cycles, setCycles] = useState<ICycle[]>([])
+  const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
+
   const { register, handleSubmit, watch, reset } = useForm<INewCycleFormDate>({
     resolver: zodResolver(newCycleFormValidadeSchema),
     defaultValues: {
@@ -31,9 +44,39 @@ export default function Home() {
   })
 
   function handleCreateNewCycle(data: INewCycleFormDate) {
-    console.log(data)
+    const id = String(new Date().getTime())
+
+    const newCycle: ICycle = {
+      id,
+      ...data,
+      startDate: new Date(),
+    }
+    setCycles((state) => [...state, newCycle])
+    setActiveCycleId(id)
     reset()
+    setAmountSecondsPassed(0)
   }
+
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
+
+  useEffect(() => {
+    if (activeCycle) {
+      setInterval(() => {
+        setAmountSecondsPassed(
+          differenceInSeconds(new Date(), activeCycle.startDate),
+        )
+      }, 1000)
+    }
+  }, [activeCycle])
+
+  const toalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
+  const currentSeconds = activeCycle ? toalSeconds - amountSecondsPassed : 0
+
+  const minutesAmaunt = Math.floor(currentSeconds / 60)
+  const secondsAmaunt = currentSeconds % 60
+
+  const minute = String(minutesAmaunt).padStart(2, '0')
+  const seconds = String(secondsAmaunt).padStart(2, '0')
 
   const task = watch('task')
   const minutesAmount = watch('minutesAmount')
@@ -73,11 +116,11 @@ export default function Home() {
         </FormContainer>
 
         <CountdownContainer>
-          <span>0</span>
-          <span>0</span>
+          <span>{minute[0]}</span>
+          <span>{minute[1]}</span>
           <Separator>:</Separator>
-          <span>0</span>
-          <span>0</span>
+          <span>{seconds[0]}</span>
+          <span>{seconds[1]}</span>
         </CountdownContainer>
 
         <StartCountdowbButton disabled={isSubimitDisabled} type="submit">
