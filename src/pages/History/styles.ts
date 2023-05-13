@@ -22,7 +22,23 @@ export const HistoryList = styled.div`
     border-collapse: collapse;
     min-width: 600px;
 
+    thead {
+      display: block;
+      width: 100%;
+
+      tr {
+        display: flex;
+        justify-content: space-around;
+      }
+    }
+    tbody {
+      display: block;
+      overflow-y: auto;
+      height: 200px;
+    }
+
     th {
+      width: 100%;
       background-color: ${(props) => props.theme['gray-600']};
       padding: 1rem;
       text-align: left;
@@ -36,7 +52,6 @@ export const HistoryList = styled.div`
       }
       &:last-child {
         border-top-right-radius: 8px;
-        padding-right: 1.5rem;
       }
     }
     td {
@@ -45,15 +60,15 @@ export const HistoryList = styled.div`
       padding: 1rem;
       font-size: 0.875rem;
       line-height: 1.6;
+      width: 100%;
 
       &:first-child {
-        width: 50%;
         border-top-left-radius: 8px;
         padding-left: 1.5rem;
       }
       &:last-child {
         border-top-right-radius: 8px;
-        padding-right: 1.5rem;
+        padding-right: 2rem;
       }
     }
   }
